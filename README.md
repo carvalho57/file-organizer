@@ -9,7 +9,6 @@ Organizar os arquivos por data de criação (ano e mês), tipo de arquivo e tama
 
 ### Exemplo de uso
 ~~~sh
-php file-organizer path
 php file-organizer --date path 
 php file-organizer --type mp3, mp4 path
 php file-organizer --type mp3, mp4 --source source --destination 
@@ -23,3 +22,21 @@ php file-organizer --size path
 - Command line php
 - I/O php
 - Iterators?
+
+
+## Passos
+- Analisa todos os arquivos, por diretórios e sub-diretorios
+- Montar a relação de todos os arquivos e suas informações
+  - tipo
+  - data de criação
+  - path absoluto
+- com base no comando informado decidir o destino do arquivo.
+
+
+## LInks 
+https://www.php.net/manual/en/features.commandline.php
+https://www.php.net/manual/en/class.iterator.php
+https://www.php.net/manual/en/class.recursiveiteratoriterator.php
+https://www.php.net/manual/en/class.recursivedirectoryiterator.php
+https://www.php.net/manual/en/class.recursivecallbackfilteriterator.php
+https://www.php.net/manual/en/class.splfileinfo.php
