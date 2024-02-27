@@ -1,25 +1,26 @@
+#!/usr/bin/php
 <?php
 
-use FileOrganizer\File;
 use FileOrganizer\FileOrganizer;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 clearstatcache();
 
-$sourceDirectory = __DIR__ . DIRECTORY_SEPARATOR . '/teste';
-$destinationDirectory = __DIR__ . DIRECTORY_SEPARATOR . '/destino';
+$commands = ['type', 'date', 'size'];
+$options = getopt('', ['date', 'type:', 'size', 'source:', 'destination:']);
 
-function sortByDate(File $file, string $destination)
-{
-    $month = $file->getCreateDate()->format('m');
-    $year = $file->getCreateDate()->format('Y');
+$source = $options['source'] ?? __DIR__;
+$destination = $options['destination'] ?? __DIR__;
 
-    $destinationPath = $destination . DIRECTORY_SEPARATOR . $year . DIRECTORY_SEPARATOR . $month;
-
-    $file->moveTo($destinationPath);
-}
-
+$source = substr($source, 0, 1) === '/' ? $source : __DIR__ . DIRECTORY_SEPARATOR . $source;
+$destination = substr($destination, 0, 1) === '/' ? $destination : __DIR__ . DIRECTORY_SEPARATOR . $destination;
 
 $fileOrganizer = new FileOrganizer();
-$fileOrganizer->organize($sourceDirectory, $destinationDirectory, 'sortByDate');
+$directory = $fileOrganizer->readDirectory($source);
+
+if (array_key_exists('date', $options)) {
+    foreach ($directory as $file) {
+        FileOrganizer::sortByDate($file, $destination);
+    }
+}

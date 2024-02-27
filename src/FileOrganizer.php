@@ -2,19 +2,12 @@
 
 namespace FileOrganizer;
 
-use Exception;
-
 class FileOrganizer
 {
-    public function organize(string $sourceDirectory, string $destinationDirectory, callable $callback): void
+    public function readDirectory(string $sourceDirectory, int $level = -1): \RecursiveIteratorIterator
     {
-        if (!is_dir($sourceDirectory) || !is_readable($sourceDirectory) || !is_writeable($sourceDirectory)) {
-            throw new Exception('Problema com o diretório de origem');
-        }
-
-        !is_dir($destinationDirectory) && mkdir($destinationDirectory, 0744, true);
-
         $directory = new \RecursiveDirectoryIterator($sourceDirectory, \FilesystemIterator::SKIP_DOTS);
+
         $files = new \RecursiveCallbackFilterIterator($directory, function (\SplFileInfo $current, $key, $iterator) {
             if ($iterator->hasChildren()) {
                 return true;
@@ -28,12 +21,25 @@ class FileOrganizer
         });
 
         $iterator = new \RecursiveIteratorIterator($files);
-        // $iterator->setMaxDepth(1);
+        $iterator->setMaxDepth($level);
 
-        foreach ($iterator as $file) {
-            $currentFile = new File($file);
+        return $iterator;
+    }
 
-            $callback($currentFile, $destinationDirectory);
-        }
+
+    public static function sortByDate(\SplFileInfo $file, string $destination)
+    {
+        $creationTime = (new \DateTimeImmutable())->setTimestamp($file->getCTime());
+
+        $month = $creationTime->format('m');
+        $year = $creationTime->format('Y');
+
+        $destinationPath = $destination . DIRECTORY_SEPARATOR . $year . DIRECTORY_SEPARATOR . $month;
+
+        !is_dir($destinationPath) && mkdir($destinationPath, 0744, true);
+
+        $destinationPath = $destinationPath . DIRECTORY_SEPARATOR . basename($file->getRealPath());
+
+        copy($file->getRealPath(), $destinationPath);
     }
 }
