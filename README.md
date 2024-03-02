@@ -18,19 +18,15 @@ php file-organizer --type="mp3, mp4, jpg"
 php file-organizer --type="mp3, mp4, jpg" --source origem --destination destino
 ~~~
 
-## Topicos que posso aprender
-- [User Storie](https://www.atlassian.com/agile/project-management/user-stories) x enginnering stories
-  > As Engenerring Story: As a enginner i want to see unit tests
-- Error handling (Exceptions or not)
-- Command line php
-- I/O php
-- Iterators
-
+## Para instalar globalmente
+~~~sh
+box compile
+sudo mv index.phar /usr/local/bin/organize
+~~~
 
 ## Links 
 * https://www.php.net/manual/en/features.commandline.usage.php
 * https://www.php.net/manual/en/function.getopt.php
-* ~~https://www.youtube.com/watch?v=5yhJMcCVNSI~~
 * https://www.php.net/manual/en/ref.readline.php
 * https://www.php.net/manual/en/class.iterator.php
 * https://www.php.net/manual/en/class.recursiveiteratoriterator.php
