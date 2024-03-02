@@ -1,11 +1,19 @@
-#!/usr/bin/php
+#!/usr/bin/env php
 <?php
 
 use FileOrganizer\FileOrganizer;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-clearstatcache();
+(static function (): void {
+    if (file_exists($autoload = __DIR__ . '/vendor/autoload.php')) {
+        include_once $autoload;
+
+        return;
+    }
+
+    throw new \RuntimeException('Não foi possível encontrar o Composer autoloader.');
+})();
 
 $commands = ['type', 'date', 'size'];
 $options = getopt('t', ['date', 'type::', 'size', 'source:', 'destination:']);
@@ -41,4 +49,35 @@ if (array_key_exists('date', $options)) {
     foreach ($directory as $file) {
         FileOrganizer::sortByType($file, $destination);
     }
+} else {
+    $help = <<<HELP
+         
+      ___  _ __ __ _  __ _ _ __ (_)_______ 
+     / _ \| '__/ _` |/ _` | '_ \| |_  / _ \
+    | (_) | | | (_| | (_| | | | | |/ /  __/
+     \___/|_|  \__, |\__,_|_| |_|_/___\___|
+               |___/                       
+               
+    Organize
+        Organiza os arquivos do diretório
+
+    Usage:
+        comando [opções] [argumentos]
+
+    Options:
+        --date       Organiza os arquivos recursivamente por data
+        --type       Organiza os arquivos pela tipo do arquivo (extensão)
+
+    Arguments:
+        --source     Diretorio que será analizado
+        --destination Diretório em que os arquivos serão encaminhados apos processados
+
+    Examples:
+    organizer --date
+    organizer --type
+    organizer --type="mp3,mp4,jpg"
+    organizer --type="mp3,mp4,jpg" --source origem --destination destino
+HELP;
+
+    echo $help . PHP_EOL;
 }
